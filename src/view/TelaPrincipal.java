@@ -120,6 +120,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
         itmMnCliente.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         itmMnCliente.setText("Cliente");
+        itmMnCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itmMnClienteActionPerformed(evt);
+            }
+        });
         mnCliente.add(itmMnCliente);
 
         itmMnOs.setText("OS");
@@ -203,7 +208,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
                         .addComponent(jLabel4)
                         .addGap(44, 44, 44)
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jDesktopPane, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE))
+                    .addComponent(jDesktopPane, javax.swing.GroupLayout.DEFAULT_SIZE, 516, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -234,6 +239,14 @@ public class TelaPrincipal extends javax.swing.JFrame {
             System.exit(0);
         }
     }//GEN-LAST:event_mnSairMouseClicked
+
+    private void itmMnClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmMnClienteActionPerformed
+     
+       TelaClientes tela1 = new TelaClientes();
+       tela1.setVisible(true);
+      // jDesktopPane.add(tela1);
+       
+    }//GEN-LAST:event_itmMnClienteActionPerformed
 
     /**
      * @param args the command line arguments

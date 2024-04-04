@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JInternalFrame.java to edit this template
  */
 package view;
-
+import Atxy2k.CustomTextField.RestrictedTextField;
 import com.sun.jdi.connect.spi.Connection;
 import controller.ModuloConexao;
 import controller.UsuarioDAO;
@@ -27,7 +27,27 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
      */
     public TelaUsuario() {
         initComponents();
-
+        RestrictedTextField validarId;
+        validarId = new RestrictedTextField(jTxtid);
+        validarId.setOnlyNums(true);
+        validarId.setLimit(4);
+        RestrictedTextField validarUsuario;
+        validarUsuario = new RestrictedTextField(jTxtNome);
+        validarUsuario.setLimit(30);
+        RestrictedTextField validarFone;
+        validarFone = new RestrictedTextField(jTxtFone);
+        validarFone.setLimit(15);
+        RestrictedTextField validarLogin;
+        validarLogin = new RestrictedTextField(jTxtLogin);
+        validarLogin.setLimit(15);
+        RestrictedTextField validarSenha;
+        validarSenha = new RestrictedTextField(jTxtSenha);
+        validarSenha.setLimit(250);
+        
+        
+        
+        
+        
     }
 
     public void limpar() {
