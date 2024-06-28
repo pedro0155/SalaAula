@@ -217,7 +217,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void itmMnOsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmMnOsActionPerformed
-        // TODO add your handling code here:
+   
+       TelaOss tela1 = new TelaOss();
+       tela1.setVisible(true);
+        jDesktopPane.add(tela1);
+             
     }//GEN-LAST:event_itmMnOsActionPerformed
 
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
@@ -242,9 +246,9 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
     private void itmMnClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmMnClienteActionPerformed
      
-       TelaClientes tela1 = new TelaClientes();
+       TelaCliente tela1 = new TelaCliente();
        tela1.setVisible(true);
-      // jDesktopPane.add(tela1);
+        jDesktopPane.add(tela1);
        
     }//GEN-LAST:event_itmMnClienteActionPerformed
 
