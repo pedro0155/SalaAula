@@ -62,6 +62,8 @@ public class TelaOss extends javax.swing.JInternalFrame {
         setMaximizable(true);
         setResizable(true);
 
+        jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
         jLabelOs.setText("Nª OS");
 
         jLabelData.setText("Data");

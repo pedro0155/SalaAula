@@ -9,10 +9,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JOptionPane;
 
 public class ClienteDAO {
     String cadastrarCliente = "insert into tbclientes(nomecli,endcli,fonecli,emailcli) values(?,?,?,?)";
+    String consultarClientesNome = "select idcli as id, nomecli as nome, endcli as endereço, fonecli as fone, emailcli as email from tbclientes where nomecli like ?";
+    String listarClientes = "SELECT * FROM tbclientes";
     
     Connection conexao = null;
     PreparedStatement ps;
@@ -48,6 +52,81 @@ public class ClienteDAO {
             }
         }
     }
+    
+    public List<Cliente> consultarClientes(String nome){
+        try {
+            List<Cliente> lista = new ArrayList<>();
+            conexao = ModuloConexao.conectar();
+            ps = conexao.prepareStatement(consultarClientesNome);
+            ps.setString(1, nome);
+            
+            rs = ps.executeQuery();
+            Cliente obj = new Cliente();
+            
+            
+            if(rs.next()){
+                obj.setId(rs.getInt(1));
+                obj.setNome(rs.getString(2));
+                obj.setEndereco(rs.getString(3));
+                obj.setTelefone(rs.getString(4));
+                obj.setEmail(rs.getString(5));
+                
+                
+            }
+            return lista;
+            
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Cliente não cadastrado!!!");
+            return null;
+        } finally {
+            try {
+                conexao.close();
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null, ex);
+            }
+        }
+   
+    
+}
+    
+    public List<Cliente> listarClientes(){
+        try {
+            List<Cliente> lista = new ArrayList<>();
+            conexao = ModuloConexao.conectar();
+            ps = conexao.prepareStatement(listarClientes);
+            rs = ps.executeQuery();
+            
+            while(rs.next()){
+                Cliente obj = new Cliente();
+                
+                obj.setId(rs.getInt("idcli"));
+                obj.setNome(rs.getString("nomecli"));
+                obj.setEndereco(rs.getString(3));
+                obj.setTelefone(rs.getString(4));
+                obj.setEmail(rs.getString(5));
+                
+                lista.add(obj);
+            }
+            return lista;
+            
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Cliente não cadastrado!!!");
+            return null;
+       } 
+        finally {
+            try {
+                conexao.close();
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null, ex);
+            }
+        }
+   
+    }
+    
+    
+    
+    
+    
     }
 
 

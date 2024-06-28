@@ -232,7 +232,7 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
                         .addComponent(jBtnPesquisar)
                         .addGap(171, 171, 171)
                         .addComponent(jLabel2)))
-                .addGap(58, 58, 58))
+                .addGap(55, 55, 55))
         );
 
         layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jBtnCreate, jBtnDelete, jBtnUpadte});
