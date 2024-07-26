@@ -45,6 +45,7 @@ public class TelaLogin extends javax.swing.JFrame {
     }
 
     public void logar(){
+        
         String sql = "select * from tbusuarios where login = ? and senha = md5(?)";
         try {
             conexao = ModuloConexao.conectar();

@@ -6,10 +6,12 @@ package view;
 import Atxy2k.CustomTextField.RestrictedTextField;
 import controller.ClienteDAO;
 import java.awt.HeadlessException;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import model.Cliente;
-/**
+/*
  *
  * @author Pedro
  */
@@ -35,6 +37,41 @@ public class TelaCliente extends javax.swing.JInternalFrame {
         validarEmail.setLimit(50);
         
     }
+      public void listarClientes(){
+        ClienteDAO dao = new ClienteDAO();
+        
+        List<Cliente> lista = dao.listarClientes();
+        DefaultTableModel dados = (DefaultTableModel) Jtxtclientes.getModel();
+        dados.setNumRows(0);
+        
+        for(Cliente c: lista){
+            dados.addRow(new Object[]{
+                c.getId(),
+                c.getNome(),
+                c.getEndereco(),
+                c.getTelefone(),
+                c.getEmail()
+        });
+        
+        }
+        
+    }
+    private void setarCampos() {
+        int setar = Jtxtclientes.getSelectedRow();
+        Jtxtidclientes.setText(Jtxtclientes.getModel().getValueAt(setar, 0).toString());
+        Jtxtnome.setText(Jtxtclientes.getModel().getValueAt(setar, 1).toString());
+        Jtxtendereco.setText(Jtxtclientes.getModel().getValueAt(setar, 2).toString());
+        Jtxttelefone.setText(Jtxtclientes.getModel().getValueAt(setar, 3).toString());
+        if (Jtxtclientes.getModel().getValueAt(setar, 4) == null){
+            Jtxtemail.setText(null);
+        } else {
+            Jtxtemail.setText(Jtxtclientes.getModel().getValueAt(setar, 4).toString());
+        }        
+        jBtnAdicionar.setEnabled(false);
+        jBtnAlterar.setEnabled(true);
+        jBtnRemover.setEnabled(true);
+    }
+
     
       private void limpar() {
         Jtxtpesquisa.setText(null);
@@ -74,7 +111,7 @@ public class TelaCliente extends javax.swing.JInternalFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jBtnAdicionar6 = new javax.swing.JButton();
+        jBtnAdicionar = new javax.swing.JButton();
         jBtnAlterar = new javax.swing.JButton();
         jBtnRemover = new javax.swing.JButton();
 
@@ -83,6 +120,33 @@ public class TelaCliente extends javax.swing.JInternalFrame {
         setMaximizable(true);
         setResizable(true);
         setPreferredSize(new java.awt.Dimension(640, 480));
+        addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
+            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+                formInternalFrameActivated(evt);
+            }
+            public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
+                formInternalFrameOpened(evt);
+            }
+        });
+
+        Jtxtpesquisa.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                JtxtpesquisaKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                JtxtpesquisaKeyReleased(evt);
+            }
+        });
 
         jLabel1.setText("*Campos Obrigatorios");
 
@@ -100,6 +164,11 @@ public class TelaCliente extends javax.swing.JInternalFrame {
                 "ID", "NOME", "ENDEREÇO", "FONE", "E-MAIL"
             }
         ));
+        Jtxtclientes.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                JtxtclientesMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(Jtxtclientes);
 
         Jtxtidclientes.setEnabled(false);
@@ -114,18 +183,28 @@ public class TelaCliente extends javax.swing.JInternalFrame {
 
         jLabel6.setText("E-mail:");
 
-        jBtnAdicionar6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/create.png"))); // NOI18N
-        jBtnAdicionar6.addActionListener(new java.awt.event.ActionListener() {
+        jBtnAdicionar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/create.png"))); // NOI18N
+        jBtnAdicionar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jBtnAdicionar6ActionPerformed(evt);
+                jBtnAdicionarActionPerformed(evt);
             }
         });
 
         jBtnAlterar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/update.png"))); // NOI18N
         jBtnAlterar.setEnabled(false);
+        jBtnAlterar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtnAlterarActionPerformed(evt);
+            }
+        });
 
         jBtnRemover.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/delete.png"))); // NOI18N
         jBtnRemover.setEnabled(false);
+        jBtnRemover.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtnRemoverActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -162,7 +241,7 @@ public class TelaCliente extends javax.swing.JInternalFrame {
                 .addGap(26, 26, 26))
             .addGroup(layout.createSequentialGroup()
                 .addGap(163, 163, 163)
-                .addComponent(jBtnAdicionar6)
+                .addComponent(jBtnAdicionar)
                 .addGap(75, 75, 75)
                 .addComponent(jBtnAlterar)
                 .addGap(73, 73, 73)
@@ -205,7 +284,7 @@ public class TelaCliente extends javax.swing.JInternalFrame {
                     .addComponent(jLabel6))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jBtnAdicionar6)
+                    .addComponent(jBtnAdicionar)
                     .addComponent(jBtnRemover)
                     .addComponent(jBtnAlterar))
                 .addGap(44, 44, 44))
@@ -214,7 +293,7 @@ public class TelaCliente extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jBtnAdicionar6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnAdicionar6ActionPerformed
+    private void jBtnAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnAdicionarActionPerformed
         try {
             if ((Jtxtnome.getText().isEmpty()) || (Jtxttelefone.getText().isEmpty())) {
                 JOptionPane.showMessageDialog(null, "Preencha todos os campos obrigatórios");
@@ -232,7 +311,94 @@ public class TelaCliente extends javax.swing.JInternalFrame {
         }catch (HeadlessException e) {
             JOptionPane.showMessageDialog(null, e);
         }
-    }//GEN-LAST:event_jBtnAdicionar6ActionPerformed
+        listarClientes();
+    }//GEN-LAST:event_jBtnAdicionarActionPerformed
+
+    private void JtxtclientesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JtxtclientesMouseClicked
+      
+        setarCampos();
+        
+    }//GEN-LAST:event_JtxtclientesMouseClicked
+
+    private void formInternalFrameActivated(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameActivated
+
+    }//GEN-LAST:event_formInternalFrameActivated
+
+    private void JtxtpesquisaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_JtxtpesquisaKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_JtxtpesquisaKeyPressed
+
+    private void JtxtpesquisaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_JtxtpesquisaKeyReleased
+      
+        String pesquisa = Jtxtpesquisa.getText()+"%";
+        ClienteDAO dao = new ClienteDAO();
+        List<Cliente> lista = new ArrayList();
+            lista = dao.consultarClientes(pesquisa);
+        DefaultTableModel dados = (DefaultTableModel) Jtxtclientes.getModel();
+        dados.setRowCount(0);
+        for(Cliente c: lista){
+            dados.addRow(new Object[]{
+                c.getId(),
+                c.getNome(),
+                c.getEndereco(),
+                c.getTelefone(),
+                c.getEmail()
+            
+        });
+        }
+        
+    }//GEN-LAST:event_JtxtpesquisaKeyReleased
+
+    private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
+
+    listarClientes();    
+
+    }//GEN-LAST:event_formInternalFrameOpened
+
+    private void jBtnAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnAlterarActionPerformed
+                                           
+        int confirma = JOptionPane.showConfirmDialog(null, "Confima as alterações nos dados deste cliente?", "Atenção!", JOptionPane.YES_NO_OPTION);
+        if (confirma == JOptionPane.YES_OPTION) {
+            
+            try {
+                Cliente obj = new Cliente();
+                obj.setNome(Jtxtnome.getText());
+                obj.setEndereco(Jtxtendereco.getText());
+                obj.setTelefone(Jtxttelefone.getText());
+                if (Jtxtemail.getText().equals("")) {
+                obj.setEmail(null);
+            } else {
+                obj.setEmail(Jtxtemail.getText());
+            }
+                obj.setId(Integer.parseInt(Jtxtidclientes.getText()));
+                if ((Jtxtnome.getText().isEmpty()) || (Jtxttelefone.getText().isEmpty())) {
+                    JOptionPane.showMessageDialog(null, "Preencha todos os campos obrigatórios");
+                } else {
+                    ClienteDAO dao = new ClienteDAO();
+                    dao.editarCliente(obj);
+                    limpar();
+                    listarClientes();
+                }
+            } catch (HeadlessException e) {
+                JOptionPane.showMessageDialog(null, e);
+            } 
+        }
+    
+    }//GEN-LAST:event_jBtnAlterarActionPerformed
+
+    private void jBtnRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnRemoverActionPerformed
+
+        int confirma = JOptionPane.showConfirmDialog(null, "Confima a exclusão deste cliente?", "Atenção!", JOptionPane.YES_NO_OPTION);
+        if (confirma == JOptionPane.YES_OPTION) {
+            Cliente obj = new Cliente();
+            obj.setId(Integer.parseInt(Jtxtidclientes.getText()));
+            ClienteDAO dao = new ClienteDAO();
+            dao.excluirCliente(obj);
+            limpar();
+            listarClientes();
+        }
+        
+    }//GEN-LAST:event_jBtnRemoverActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -245,12 +411,6 @@ public class TelaCliente extends javax.swing.JInternalFrame {
     private javax.swing.JTextField Jtxtpesquisa;
     private javax.swing.JTextField Jtxttelefone;
     private javax.swing.JButton jBtnAdicionar;
-    private javax.swing.JButton jBtnAdicionar1;
-    private javax.swing.JButton jBtnAdicionar2;
-    private javax.swing.JButton jBtnAdicionar3;
-    private javax.swing.JButton jBtnAdicionar4;
-    private javax.swing.JButton jBtnAdicionar5;
-    private javax.swing.JButton jBtnAdicionar6;
     private javax.swing.JButton jBtnAlterar;
     private javax.swing.JButton jBtnRemover;
     private javax.swing.JLabel jLabel1;
