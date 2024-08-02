@@ -22,7 +22,8 @@ import java.awt.HeadlessException;
 public class OsDAO {
     String consultarClientesNome = "select idcli as id, nomecli as nome, fonecli as fone from tbclientes where nomecli like ?";
     String listarClientes = "SELECT * FROM tbclientes";
-
+    String maxOs = "select max(os) from tbos";
+    String buscarOS = "select os,data_os,tipo,situacao,equipamento,defeito,servico,tecnico,valor,idcli from tbos where os= ?";
     
     String emitirOS = "insert into tbos(tipo,situacao,equipamento,defeito,servico,tecnico,valor,idcli) values(?,?,?,?,?,?,?,?)";
     
@@ -127,5 +128,71 @@ public void emitirOS(Os obj) {
                 JOptionPane.showMessageDialog(null, ex);
             }
         }
+    }
+public Os recuperarOs() {
+        Os obj = new Os();
+        try {
+            conexao = ModuloConexao.conectar();
+            ps = conexao.prepareStatement(maxOs);
+            rs = ps.executeQuery();
+            
+            if (rs.next()) {
+                obj.setOs(rs.getInt(1));
+            }
+            return obj;
+        } catch (HeadlessException | SQLException e) {
+            JOptionPane.showMessageDialog(null, e);
+        } finally {
+            try {
+                conexao.close();
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null, ex);
+            }
+        }
+        return null;
+    }
+
+
+/**
+     * Método responsável pela pesquisa de uma Ordem de Serviço
+     */
+    public Os consultarOS(int idOs) {
+        try {
+            conexao = ModuloConexao.conectar();
+            ps = conexao.prepareStatement(buscarOS);
+            ps.setInt(1, idOs);
+
+            rs = ps.executeQuery();
+            Os obj = new Os();
+            if (rs.next()) {
+
+                //obj.setOs(rs.getInt("os"));
+                obj.setOs(rs.getInt(1));
+                obj.setDataOs(rs.getDate(2));
+                obj.setTipo(rs.getString(3));
+                obj.setSituacao(rs.getString(4));
+                obj.setEquipamento(rs.getString(5));
+                obj.setDefeito(rs.getString(6));
+                obj.setServico(rs.getString(7));
+                obj.setTecnico(rs.getString(8));
+                obj.setValor(rs.getDouble(9));
+                Cliente cliente = new Cliente();
+                cliente.setId(rs.getInt(10));
+                obj.setCliente(cliente);
+
+            }
+            return obj;
+        } catch (SQLSyntaxErrorException e) {
+            JOptionPane.showMessageDialog(null, "OS Inválida");
+        } catch (HeadlessException | SQLException e) {
+            JOptionPane.showMessageDialog(null, e);
+        } finally {
+            try {
+                conexao.close();
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null, ex);
+            }
+        }
+        return null;
     }
 }
