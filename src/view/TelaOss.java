@@ -4,6 +4,15 @@
  */
 package view;
 
+
+import controller.OsDAO;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import model.Cliente;
+import model.Os;
+
 /**
  *
  * @author Pedro
@@ -15,8 +24,24 @@ public class TelaOss extends javax.swing.JInternalFrame {
      */
     public TelaOss() {
         initComponents();
+        
+        
     }
-
+    public void listarClientes(){
+        OsDAO dao = new OsDAO();
+        
+        List<Cliente> lista = dao.listarClientes();
+        DefaultTableModel dados = (DefaultTableModel) jTableCliente.getModel();
+        dados.setNumRows(0);
+        
+        for(Cliente c: lista){
+            dados.addRow(new Object[]{
+                c.getId(),
+                c.getNome(),
+                c.getTelefone(),
+        });
+ }
+         }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -31,8 +56,8 @@ public class TelaOss extends javax.swing.JInternalFrame {
         jLabelData = new javax.swing.JLabel();
         jTextOs = new javax.swing.JTextField();
         jTextData = new javax.swing.JTextField();
-        jRadioOrcamento = new javax.swing.JRadioButton();
-        jRadioOs = new javax.swing.JRadioButton();
+        rbtOrc = new javax.swing.JRadioButton();
+        rbtOs = new javax.swing.JRadioButton();
         jPanel2 = new javax.swing.JPanel();
         jTextCliente = new javax.swing.JTextField();
         jTextId = new javax.swing.JTextField();
@@ -40,27 +65,44 @@ public class TelaOss extends javax.swing.JInternalFrame {
         jTableCliente = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jComboStatus = new javax.swing.JComboBox<>();
-        jTextField2 = new javax.swing.JTextField();
+        jCBXOsSit = new javax.swing.JComboBox<>();
+        jTxtOsEquip = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
+        jTxtOsDef = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
-        jTextTecnico = new javax.swing.JTextField();
+        jTxtOsServ = new javax.swing.JTextField();
+        jTxtOsTec = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        jTextTotal = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        jTxtOsValor = new javax.swing.JTextField();
+        jBtnOsAdicionar = new javax.swing.JButton();
+        jBtnOsPesquisar = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
+        jBtnOsImprimir = new javax.swing.JButton();
 
         setClosable(true);
         setIconifiable(true);
         setMaximizable(true);
         setResizable(true);
+        addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
+            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
+                formInternalFrameOpened(evt);
+            }
+        });
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -68,9 +110,13 @@ public class TelaOss extends javax.swing.JInternalFrame {
 
         jLabelData.setText("Data");
 
-        jRadioOrcamento.setText("Orçamento");
+        jTextOs.setEditable(false);
 
-        jRadioOs.setText("Ordem de Serviço");
+        jTextData.setEditable(false);
+
+        rbtOrc.setText("Orçamento");
+
+        rbtOs.setText("Ordem de Serviço");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -80,9 +126,9 @@ public class TelaOss extends javax.swing.JInternalFrame {
                 .addGap(24, 24, 24)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jRadioOrcamento)
+                        .addComponent(rbtOrc)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jRadioOs))
+                        .addComponent(rbtOs))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jTextOs, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
@@ -106,12 +152,18 @@ public class TelaOss extends javax.swing.JInternalFrame {
                     .addComponent(jTextData, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(35, 35, 35)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jRadioOrcamento)
-                    .addComponent(jRadioOs))
+                    .addComponent(rbtOrc)
+                    .addComponent(rbtOs))
                 .addContainerGap(18, Short.MAX_VALUE))
         );
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Cliente"));
+
+        jTextCliente.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTextClienteKeyReleased(evt);
+            }
+        });
 
         jTextId.setEditable(false);
 
@@ -135,6 +187,11 @@ public class TelaOss extends javax.swing.JInternalFrame {
                 "Id", "Nome", "Fone"
             }
         ));
+        jTableCliente.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTableClienteMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTableCliente);
 
         jLabel1.setText("* Id");
@@ -170,10 +227,10 @@ public class TelaOss extends javax.swing.JInternalFrame {
 
         jLabel2.setText("*Status");
 
-        jComboStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " ", "Aguardando Aprovaçao", "Aguardando Peças", "Aguardando Retirada", "Na Bancada", "Retirado" }));
-        jComboStatus.addActionListener(new java.awt.event.ActionListener() {
+        jCBXOsSit.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " ", "Aguardando Aprovaçao", "Aguardando Peças", "Aguardando Retirada", "Na Bancada", "Retirado" }));
+        jCBXOsSit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboStatusActionPerformed(evt);
+                jCBXOsSitActionPerformed(evt);
             }
         });
 
@@ -187,9 +244,14 @@ public class TelaOss extends javax.swing.JInternalFrame {
 
         jLabel7.setText("Valor Total");
 
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/create.png"))); // NOI18N
+        jBtnOsAdicionar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/create.png"))); // NOI18N
+        jBtnOsAdicionar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtnOsAdicionarActionPerformed(evt);
+            }
+        });
 
-        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/read.png"))); // NOI18N
+        jBtnOsPesquisar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/read.png"))); // NOI18N
 
         jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/update.png"))); // NOI18N
         jButton3.setToolTipText("");
@@ -198,8 +260,8 @@ public class TelaOss extends javax.swing.JInternalFrame {
         jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/delete.png"))); // NOI18N
         jButton4.setEnabled(false);
 
-        jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/print.png"))); // NOI18N
-        jButton5.setEnabled(false);
+        jBtnOsImprimir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/print.png"))); // NOI18N
+        jBtnOsImprimir.setEnabled(false);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -214,7 +276,7 @@ public class TelaOss extends javax.swing.JInternalFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel2)
                                 .addGap(18, 18, 18)
-                                .addComponent(jComboStatus, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addComponent(jCBXOsSit, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                         .addGap(18, 18, 18)
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
@@ -223,11 +285,11 @@ public class TelaOss extends javax.swing.JInternalFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel3)
                                 .addGap(18, 18, 18)
-                                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 491, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jTxtOsEquip, javax.swing.GroupLayout.PREFERRED_SIZE, 491, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel4)
                                 .addGap(18, 18, 18)
-                                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 491, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jTxtOsDef, javax.swing.GroupLayout.PREFERRED_SIZE, 491, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(jLabel6)
@@ -235,24 +297,24 @@ public class TelaOss extends javax.swing.JInternalFrame {
                                 .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jTextTecnico)
+                                        .addComponent(jTxtOsTec)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addComponent(jLabel7)
                                         .addGap(18, 18, 18)
-                                        .addComponent(jTextTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 491, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                                        .addComponent(jTxtOsValor, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jTxtOsServ, javax.swing.GroupLayout.PREFERRED_SIZE, 491, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addGap(98, 98, 98)
-                .addComponent(jButton1)
+                .addComponent(jBtnOsAdicionar)
                 .addGap(18, 18, 18)
-                .addComponent(jButton2)
+                .addComponent(jBtnOsPesquisar)
                 .addGap(18, 18, 18)
                 .addComponent(jButton3)
                 .addGap(18, 18, 18)
                 .addComponent(jButton4)
                 .addGap(18, 18, 18)
-                .addComponent(jButton5)
+                .addComponent(jBtnOsImprimir)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -267,50 +329,113 @@ public class TelaOss extends javax.swing.JInternalFrame {
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2)
-                            .addComponent(jComboStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jCBXOsSit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTxtOsEquip, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTxtOsDef, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTxtOsServ, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextTecnico, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTxtOsTec, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6)
                     .addComponent(jLabel7)
-                    .addComponent(jTextTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTxtOsValor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
+                    .addComponent(jBtnOsAdicionar)
+                    .addComponent(jBtnOsPesquisar)
                     .addComponent(jButton3)
                     .addComponent(jButton4)
-                    .addComponent(jButton5))
+                    .addComponent(jBtnOsImprimir))
                 .addGap(28, 28, 28))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jComboStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboStatusActionPerformed
+    private void jCBXOsSitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCBXOsSitActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jComboStatusActionPerformed
+    }//GEN-LAST:event_jCBXOsSitActionPerformed
+
+    private void jBtnOsAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnOsAdicionarActionPerformed
+  if ((jTextId.getText().isEmpty()) || (jTxtOsEquip.getText().isEmpty()) || (jTxtOsDef.getText().isEmpty()) || jCBXOsSit.getSelectedItem().equals(" ")) {
+            JOptionPane.showMessageDialog(null, "Preencha todos os campos obrigatórios");
+        } else {
+            Os obj = new Os();
+            Cliente cliente = new Cliente();
+            
+            if (rbtOrc.isSelected()) {
+                obj.setTipo(rbtOrc.getText());
+            } else if (rbtOs.isSelected()) {
+                obj.setTipo(rbtOs.getText());
+            }
+            obj.setSituacao((String) jCBXOsSit.getSelectedItem());
+            obj.setEquipamento(jTxtOsEquip.getText());
+            obj.setDefeito(jTxtOsDef.getText());
+            obj.setServico(jTxtOsServ.getText());
+            obj.setTecnico(jTxtOsTec.getText());
+            obj.setValor(Double.valueOf(jTxtOsValor.getText()));
+            //  obj.setValor(Double.parseDouble(jTxtOsValor.getText()));
+           
+            cliente.setId(Integer.valueOf(jTextId.getText()));
+            obj.setCliente(cliente);
+            
+            OsDAO dao = new OsDAO();
+            dao.emitirOS(obj);
+            //recuperarOs();
+            JOptionPane.showMessageDialog(null, "OS emitida com sucesso");
+            jBtnOsAdicionar.setEnabled(false);
+            jBtnOsPesquisar.setEnabled(true);
+            jBtnOsImprimir.setEnabled(true);
+            
+            
+        }
+    }//GEN-LAST:event_jBtnOsAdicionarActionPerformed
+
+    private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
+ listarClientes();     
+ rbtOrc.setSelected(true);
+// TODO add your handling code here:
+    }//GEN-LAST:event_formInternalFrameOpened
+
+    private void jTextClienteKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextClienteKeyReleased
+ String pesquisa = jTextCliente.getText()+"%";
+        OsDAO dao = new OsDAO();
+        List<Cliente> lista = new ArrayList();
+            lista = dao.consultarClientes(pesquisa);
+        DefaultTableModel dados = (DefaultTableModel) jTableCliente.getModel();
+        dados.setRowCount(0);
+        for(Cliente c: lista){
+            dados.addRow(new Object[]{
+                c.getId(),
+                c.getNome(),
+                c.getTelefone(),
+            
+        });
+        }
+                // TODO add your handling code here:
+    }//GEN-LAST:event_jTextClienteKeyReleased
+
+    private void jTableClienteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableClienteMouseClicked
+ jTextId.setText(jTableCliente.getValueAt(jTableCliente.getSelectedRow(), 0).toString());
+    }//GEN-LAST:event_jTableClienteMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jBtnOsAdicionar;
+    private javax.swing.JButton jBtnOsImprimir;
+    private javax.swing.JButton jBtnOsPesquisar;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JComboBox<String> jComboStatus;
+    private javax.swing.JComboBox<String> jCBXOsSit;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -322,18 +447,20 @@ public class TelaOss extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabelOs;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JRadioButton jRadioOrcamento;
-    private javax.swing.JRadioButton jRadioOs;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTableCliente;
     private javax.swing.JTextField jTextCliente;
     private javax.swing.JTextField jTextData;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextId;
     private javax.swing.JTextField jTextOs;
-    private javax.swing.JTextField jTextTecnico;
-    private javax.swing.JTextField jTextTotal;
+    private javax.swing.JTextField jTxtOsDef;
+    private javax.swing.JTextField jTxtOsEquip;
+    private javax.swing.JTextField jTxtOsServ;
+    private javax.swing.JTextField jTxtOsTec;
+    private javax.swing.JTextField jTxtOsValor;
+    private javax.swing.JRadioButton rbtOrc;
+    private javax.swing.JRadioButton rbtOs;
     // End of variables declaration//GEN-END:variables
+
+
 }
